@@ -12,7 +12,7 @@ const AppDiv = styled.div`
   color: #cccc;
 `;
 
-const COIN_COUNT = 10;
+const COIN_COUNT = 5;
 
 function App(props) {
   const [balance, setBalance] = useState(10000);
