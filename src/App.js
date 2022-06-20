@@ -33,23 +33,17 @@ class App extends React.Component {
       return newValues;
     });
 
-    this.setState((oldState) => ({
-      ...oldState,
-      ...{
-        coinData: newCoinData,
-      },
-    }));
+    this.setState({
+      coinData: newCoinData,
+    });
   };
 
   handleToggleBalance = () => {
     const { showBalance } = this.state;
 
-    this.setState((oldState) => ({
-      ...oldState,
-      ...{
-        showBalance: !showBalance,
-      },
-    }));
+    this.setState({
+      showBalance: !showBalance,
+    });
   };
 
   render() {
