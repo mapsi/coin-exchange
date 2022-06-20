@@ -42,7 +42,7 @@ class App extends React.Component {
         key: ticker.id,
         name: ticker.name,
         ticker: ticker.symbol,
-        price: parseFloat(Number(ticker.quotes.USD.price)).toFixed(4),
+        price: parseFloat(ticker.quotes.USD.price),
         balance: 0,
       };
     });

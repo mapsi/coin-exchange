@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
@@ -8,22 +7,18 @@ const Section = styled.section`
   padding: 1.5rem 0 1.5rem 5rem;
 `;
 
-export default class AccountBalance extends Component {
-  render() {
-    const buttonText = this.props.showBalance ? "Hide" : "Show";
-    let content = null;
-    if (this.props.showBalance) {
-      content = <>Balance: ${this.props.amount}</>;
-    }
-    return (
-      <Section>
-        {content}
-        <button onClick={this.props.handleToggleBalance}>
-          {buttonText} Balance
-        </button>
-      </Section>
-    );
+export default function AccountBalance(props) {
+  const buttonText = props.showBalance ? "Hide" : "Show";
+  let content = null;
+  if (props.showBalance) {
+    content = <>Balance: ${props.amount}</>;
   }
+  return (
+    <Section>
+      {content}
+      <button onClick={props.handleToggleBalance}>{buttonText} Balance</button>
+    </Section>
+  );
 }
 
 AccountBalance.propTypes = {
