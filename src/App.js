@@ -1,6 +1,6 @@
 import AccountBalance from "./components/AccountBalance/AccountBalance";
 
-import React from "react";
+import { useEffect, useState } from "react";
 import CoinList from "./components/CoinList/CoinList";
 import ExchangeHeader from "./components/ExchangeHeader/ExchangeHeader";
 import styled from "styled-components";
@@ -12,26 +12,27 @@ const AppDiv = styled.div`
   color: #cccc;
 `;
 
-const COIN_COUNT = 5;
+const COIN_COUNT = 10;
 
-class App extends React.Component {
-  state = {
-    showBalance: true,
-    balance: 10000,
-    coinData: [],
-  };
+function App(props) {
+  const [balance, setBalance] = useState(10000);
+  const [showBalance, setShowBalance] = useState(true);
+  const [coinData, setCoinData] = useState([]);
 
-  componentDidMount = async () => {
+  const fetchData = async () => {
     const { data } = await axios.get("https://api.coinpaprika.com/v1/coins");
-
     const coinList = data.slice(0, COIN_COUNT).map((coin) => coin.id);
-
-    const coinData = await this.getTickerData(coinList);
-
-    this.setState({ coinData });
+    const coinData = await getTickerData(coinList);
+    setCoinData(coinData);
   };
 
-  getTickerData = async (coinList) => {
+  useEffect(() => {
+    if (coinData.length === 0) {
+      fetchData();
+    }
+  });
+
+  const getTickerData = async (coinList) => {
     const promises = coinList.map((coin) => {
       return axios.get(`https://api.coinpaprika.com/v1/tickers/${coin}`);
     });
@@ -48,44 +49,38 @@ class App extends React.Component {
     });
   };
 
-  handleRefresh = async (valueChangeTicker) => {
-    const tickerData = await this.getTickerData([valueChangeTicker]);
+  const handleRefresh = async (valueChangeTicker) => {
+    const tickerData = await getTickerData([valueChangeTicker]);
 
-    const coinIndex = this.state.coinData.findIndex(
+    const coinIndex = coinData.findIndex(
       (coin) => coin.key === valueChangeTicker
     );
     if (coinIndex !== -1) {
-      const { coinData } = { ...this.state };
-      coinData[coinIndex].price = tickerData[0].price;
-      this.setState({ coinData });
+      const newCoinData = { ...coinData };
+      newCoinData[coinIndex].price = tickerData[0].price;
+      setCoinData(newCoinData);
     }
   };
 
-  handleToggleBalance = () => {
-    const { showBalance } = this.state;
-
-    this.setState({
-      showBalance: !showBalance,
-    });
+  const handleToggleBalance = () => {
+    setShowBalance(!showBalance);
   };
 
-  render() {
-    return (
-      <AppDiv>
-        <ExchangeHeader />
-        <AccountBalance
-          amount={10000}
-          showBalance={this.state.showBalance}
-          handleToggleBalance={this.handleToggleBalance}
-        />
-        <CoinList
-          coinData={this.state.coinData}
-          showBalance={this.state.showBalance}
-          handleRefresh={this.handleRefresh}
-        />
-      </AppDiv>
-    );
-  }
+  return (
+    <AppDiv>
+      <ExchangeHeader />
+      <AccountBalance
+        amount={10000}
+        showBalance={showBalance}
+        handleToggleBalance={handleToggleBalance}
+      />
+      <CoinList
+        coinData={coinData}
+        showBalance={showBalance}
+        handleRefresh={handleRefresh}
+      />
+    </AppDiv>
+  );
 }
 
 export default App;
