@@ -23,22 +23,15 @@ class App extends React.Component {
   };
 
   handleRefresh = (valueChangeTicker) => {
-    const newCoinData = this.state.coinData.map(
-      ({ ticker, name, price, balance }) => {
-        let newPrice = price;
-        if (valueChangeTicker === ticker) {
-          const randomPercentage = 0.995 + Math.random() * 0.01;
+    const newCoinData = this.state.coinData.map((values) => {
+      let newValues = { ...values };
+      if (valueChangeTicker === newValues.ticker) {
+        const randomPercentage = 0.995 + Math.random() * 0.01;
 
-          newPrice = newPrice * randomPercentage;
-        }
-        return {
-          ticker,
-          name,
-          price: newPrice,
-          balance,
-        };
+        newValues.price = values.price * randomPercentage;
       }
-    );
+      return newValues;
+    });
 
     this.setState((oldState) => ({
       ...oldState,
