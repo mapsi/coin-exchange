@@ -15,18 +15,20 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      showBalance: true,
       balance: 10000,
       coinData: [
-        { name: "Bitcoin", ticker: "BTC", price: 9999.9 },
-        { name: "Ethereum", ticker: "ETH", price: 299.99 },
-        { name: "Tether", ticker: "USDT", price: 1.0 },
+        { name: "Bitcoin", ticker: "BTC", price: 9999.9, balance: 1 },
+        { name: "Ethereum", ticker: "ETH", price: 299.99, balance: 2 },
+        { name: "Tether", ticker: "USDT", price: 1.0, balance: 3 },
       ],
     };
 
     this.handleRefresh = this.handleRefresh.bind(this);
+    this.handleToggleBalance = this.handleToggleBalance.bind(this);
   }
   handleRefresh(valueChangeTicker) {
-    const newCoinData = this.state.coinData.map(({ ticker, name, price }) => {
+    const newCoinData = this.state.coinData.map(({ ticker, name, price, balance }) => {
       let newPrice = price;
       if (valueChangeTicker === ticker) {
         const randomPercentage = 0.995 + Math.random() * 0.01;
@@ -37,20 +39,39 @@ class App extends React.Component {
         ticker,
         name,
         price: newPrice,
+        balance,
       };
     });
 
-    this.setState({
+    this.setState((oldState) => ({
+      ...oldState,
+      ...{
       coinData: newCoinData,
-    });
+      }
+    }));
+  }
+  handleToggleBalance() {
+    const { showBalance } = this.state;
+
+    this.setState((oldState) => ({
+      ...oldState,
+      ...{
+        showBalance: !showBalance,
+      }
+    }));
   }
   render() {
     return (
       <AppDiv>
         <ExchangeHeader />
-        <AccountBalance amount={10000} />
+        <AccountBalance
+          amount={10000}
+          showBalance={this.state.showBalance}
+          handleToggleBalance={this.handleToggleBalance}
+        />
         <CoinList
           coinData={this.state.coinData}
+          showBalance={this.state.showBalance}
           handleRefresh={this.handleRefresh}
         />
       </AppDiv>
