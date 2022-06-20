@@ -12,54 +12,53 @@ const AppDiv = styled.div`
 `;
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showBalance: true,
-      balance: 10000,
-      coinData: [
-        { name: "Bitcoin", ticker: "BTC", price: 9999.9, balance: 1 },
-        { name: "Ethereum", ticker: "ETH", price: 299.99, balance: 2 },
-        { name: "Tether", ticker: "USDT", price: 1.0, balance: 3 },
-      ],
-    };
+  state = {
+    showBalance: true,
+    balance: 10000,
+    coinData: [
+      { name: "Bitcoin", ticker: "BTC", price: 9999.9, balance: 1 },
+      { name: "Ethereum", ticker: "ETH", price: 299.99, balance: 2 },
+      { name: "Tether", ticker: "USDT", price: 1.0, balance: 3 },
+    ],
+  };
 
-    this.handleRefresh = this.handleRefresh.bind(this);
-    this.handleToggleBalance = this.handleToggleBalance.bind(this);
-  }
-  handleRefresh(valueChangeTicker) {
-    const newCoinData = this.state.coinData.map(({ ticker, name, price, balance }) => {
-      let newPrice = price;
-      if (valueChangeTicker === ticker) {
-        const randomPercentage = 0.995 + Math.random() * 0.01;
+  handleRefresh = (valueChangeTicker) => {
+    const newCoinData = this.state.coinData.map(
+      ({ ticker, name, price, balance }) => {
+        let newPrice = price;
+        if (valueChangeTicker === ticker) {
+          const randomPercentage = 0.995 + Math.random() * 0.01;
 
-        newPrice = newPrice * randomPercentage;
+          newPrice = newPrice * randomPercentage;
+        }
+        return {
+          ticker,
+          name,
+          price: newPrice,
+          balance,
+        };
       }
-      return {
-        ticker,
-        name,
-        price: newPrice,
-        balance,
-      };
-    });
+    );
 
     this.setState((oldState) => ({
       ...oldState,
       ...{
-      coinData: newCoinData,
-      }
+        coinData: newCoinData,
+      },
     }));
-  }
-  handleToggleBalance() {
+  };
+
+  handleToggleBalance = () => {
     const { showBalance } = this.state;
 
     this.setState((oldState) => ({
       ...oldState,
       ...{
         showBalance: !showBalance,
-      }
+      },
     }));
-  }
+  };
+
   render() {
     return (
       <AppDiv>
