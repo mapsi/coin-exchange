@@ -4,6 +4,7 @@ import logo from "./logo.svg";
 const Header = styled.header`
   background-color: #282c34;
   min-height: 20vh;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -18,7 +19,10 @@ const Img = styled.img`
 `;
 
 const H1 = styled.h1`
-  font-size: 4rem;
+  font-size: 2rem;
+  line-height: 8rem;
+  font-weight: bold;
+  min-width: 300px;
 `;
 
 export default function ExchangeHeader() {

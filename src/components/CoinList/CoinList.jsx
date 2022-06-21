@@ -2,14 +2,12 @@ import styled from "styled-components";
 import Coin from "../Coin/Coin";
 
 const Table = styled.table`
-  margin: 50px auto 50px auto;
-  display: inline-block;
   font-size: 1.4rem;
 `;
 
 export default function CoinList(props) {
   return (
-    <Table>
+    <Table className="table table-primary table-bordered">
       <thead>
         <tr>
           <th>Name</th>
@@ -28,6 +26,7 @@ export default function CoinList(props) {
             price={price}
             balance={balance}
             showBalance={props.showBalance}
+            handleTransaction={props.handleTransaction}
             handleRefresh={props.handleRefresh}
             coinId={key}
           />

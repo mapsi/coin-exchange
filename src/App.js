@@ -5,6 +5,8 @@ import CoinList from "./components/CoinList/CoinList";
 import ExchangeHeader from "./components/ExchangeHeader/ExchangeHeader";
 import styled from "styled-components";
 import axios from "axios";
+import 'bootswatch/dist/flatly/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/js/all'
 
 const AppDiv = styled.div`
   text-align: center;
@@ -16,7 +18,7 @@ const COIN_COUNT = 5;
 
 function App(props) {
   const [balance, setBalance] = useState(10000);
-  const [showBalance, setShowBalance] = useState(true);
+  const [showBalance, setShowBalance] = useState(false);
   const [coinData, setCoinData] = useState([]);
 
   const fetchData = async () => {
@@ -31,6 +33,11 @@ function App(props) {
       fetchData();
     }
   });
+
+  const handleBrrrr = () => {
+    setBalance(balance + 2000);
+  }
+
 
   const getTickerData = async (coinList) => {
     const promises = coinList.map((coin) => {
@@ -48,6 +55,20 @@ function App(props) {
       };
     });
   };
+
+  const handleTransaction = (isBuy, coin) => {
+    const balanceChange = isBuy ? 1 : -1;
+    const newCoinData = coinData.map(values => {
+      const newValues = { ...values };
+      if (coin === values.key) {
+        newValues.balance += balanceChange;
+        setBalance(balance - balanceChange * newValues.price);
+      }
+      return newValues;
+    })
+
+    setCoinData(newCoinData);
+  }
 
   const handleRefresh = async (valueChangeTicker) => {
     const tickerData = await getTickerData([valueChangeTicker]);
@@ -70,13 +91,15 @@ function App(props) {
     <AppDiv>
       <ExchangeHeader />
       <AccountBalance
-        amount={10000}
+        amount={balance}
         showBalance={showBalance}
         handleToggleBalance={handleToggleBalance}
+        handleBrrrr={handleBrrrr}
       />
       <CoinList
         coinData={coinData}
         showBalance={showBalance}
+        handleTransaction={handleTransaction}
         handleRefresh={handleRefresh}
       />
     </AppDiv>
